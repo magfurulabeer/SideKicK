@@ -5,7 +5,7 @@
 //  Created by Magfurul Abeer on 9/4/16.
 //  Copyright © 2016 Magfurul Abeer. All rights reserved.
 //
-// SideKicK is a collection of helper methods to speed up the development process
+// SideKicK is a collection of useful extensions to speed up the development process
 
 
 import UIKit
@@ -113,64 +113,6 @@ extension UIColor {
         }
         return nil
     }
-    
-    //    class func colorFromImage(atPoint point: CGPoint) {
-    //        var pixel : [UInt8] = [0, 0, 0, 0]
-    //        let colorSpace = CGColorSpaceCreateDeviceRGB()
-    //        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue).rawValue
-    //        let context = CGBitmapContextCreate(UnsafeMutablePointer(pixel), 1, 1, 8, 4, colorSpace, bitmapInfo)
-    //        CGContextTranslateCTM(context, -point.x, -point.y)
-    //
-    //        return UIColor(colorLiteralRed: Float(pixel[0])/255.0, green: Float(pixel[1])/255.0, blue: Float(pixel[2])/255.0, alpha: Float(pixel[3])/255.0)
-    //    }
-    //
-    //    class func colorFromImage(image: UIImage, atPoint point: CGPoint) {
-    //        var pixel : [UInt8] = [0, 0, 0, 0]
-    //        let colorSpace = CGColorSpaceCreateDeviceRGB()
-    //        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue).rawValue
-    //        let context = CGBitmapContextCreate(UnsafeMutablePointer(pixel), 1, 1, 8, 4, colorSpace, bitmapInfo)
-    //        CGContextTranslateCTM(context, -point.x, -point.y)
-    //
-    //        return UIColor(colorLiteralRed: Float(pixel[0])/255.0, green: Float(pixel[1])/255.0, blue: Float(pixel[2])/255.0, alpha: Float(pixel[3])/255.0)
-    //    }
-    
-    /*
-     - (UIColor *) colorOfPoint:(CGPoint)point
-     {
-     unsigned char pixel[4] = {0};
-     
-     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-     
-     CGContextRef context = CGBitmapContextCreate(pixel, 1, 1, 8, 4, colorSpace, kCGBitmapAlphaInfoMask & kCGImageAlphaPremultipliedLast);
-     
-     CGContextTranslateCTM(context, -point.x, -point.y);
-     
-     [self.layer renderInContext:context];
-     
-     CGContextRelease(context);
-     CGColorSpaceRelease(colorSpace);
-     
-     //NSLog(@"pixel: %d %d %d %d", pixel[0], pixel[1], pixel[2], pixel[3]);
-     
-     UIColor *color = [UIColor colorWithRed:pixel[0]/255.0 green:pixel[1]/255.0 blue:pixel[2]/255.0 alpha:pixel[3]/255.0];
-     
-     return color;
-     }
-     */
-    
-    // ERROR
-    //    convenience init?(hexCode: String ) {
-    //        let code = hexCode.stringByReplacingOccurrencesOfString("#", withString: "").uppercaseString
-    //
-    //        if code.characters.count == 6 {
-    //            let red = CGFloat(strtoul(hexCode.substring(0, size: 2)!, nil, 16))/255
-    //            let green = CGFloat(strtoul(hexCode.substring(0, size: 2)!, nil, 16))/255
-    //            let blue = CGFloat(strtoul(hexCode.substring(0, size: 2)!, nil, 16))/255
-    //            self.init(red: red, green: green, blue: blue, alpha: 1)
-    //            
-    //        }
-    //        return nil
-    //    }
 }
 
 
@@ -252,33 +194,321 @@ extension UIView {
 
 
 
+// Mark: Int Extensions 
 
 extension Int {
-    /// An easy way to run a block of code X number of times
+    /**
+     Swift port of the Ruby #times
+     An easy way to run a block of code n times
+     
+     Eg:
+     
+     3.times {
+        print("Beetlejuice")
+     }
+     
+     >> Beetlejuice
+     >> Beetlejuice
+     >> Beetlejuice
+     
+     - Parameters:
+     - block: Block of code that should be run n times
+     */
     func times(block: () -> ()) {
         for _ in 0..<self {
             block()
         }
     }
     
-    func upTo(x: Int, block: (Int) -> ()) {
+    /**
+     Swift port of the Ruby #upTo
+     
+     Eg:
+     
+     1.upTo(5) { n in
+        print(n)
+     }
+     
+     >> 1
+     >> 2
+     >> 3
+     >> 4
+     >> 5
+     
+     - Parameters:
+     - block: Block of code that should be run for every number from x up to y
+     */
+    func upTo(_ x: Int, block: (Int) -> ()) {
         for i in self...x {
             block(i)
         }
     }
     
-    func downTo(x: Int, block: (Int) -> ()) {
+    /**
+     Swift port of the Ruby #downTo
+     
+     Eg:
+     
+     3.upTo(1) { n in
+        print(n)
+     }
+     
+     >> 3
+     >> 2
+     >> 1
+     
+     - Parameters:
+     - block: Block of code that should be run for every number from y down to x
+     */
+    func downTo(_ x: Int, block: (Int) -> ()) {
         for i in self.stride(through: x, by: -1) {
             block(i)
         }
     }
     
-    func step(to: Int, by: Int, block: (Int) -> ()) {
+    /**
+     Swift port of the Ruby #step
+     
+     Eg:
+     
+     0.step(10, 2) { n in 
+        print(n)
+     }
+     
+     >> 0
+     >> 2
+     >> 4
+     >> 6
+     >> 8
+     >> 10
+     
+     - Parameters:
+     - block: Block of code that should be run for every number from y down to x
+     */
+    func step(_ to: Int, _ by: Int, block: (Int) -> ()) {
         for i in self.stride(through: to, by: by) {
             block(i)
         }
     }
     
+    /**
+     Convenient way to get ordinal version of number
+     
+     Eg:
+     
+     5.ordinal
+     
+     >> 5th
+     */
+    var ordinal: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .ordinal
+        return formatter.string(from: NSNumber(integerLiteral: self)) ?? ""
+    }
+    
+    /**
+     Convenient way to get spelled out version of number
+     
+     Eg:
+     
+     5.spelledOut
+     
+     >> five
+     */
+    var spelledOut: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .spellOut
+        return formatter.string(from: NSNumber(integerLiteral: self)) ?? ""
+    }
+    
+    /**
+     Convenient way to get number in scientific notation
+     
+     Eg:
+     
+     123.scientific
+     
+     >> 1.23E2
+     */
+    var scientific: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .scientific
+        return formatter.string(from: NSNumber(integerLiteral: self)) ?? ""
+    }
+    
+    /**
+     Convenient way to get currency form of your number
+     
+     Eg:
+     
+     123.currency
+     
+     >> $123
+     */
+    var currency: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        return formatter.string(from: NSNumber(integerLiteral: self)) ?? ""
+    }
+    
+    var ok: Int {
+        return 0
+    }
+    
+}
+
+
+
+// Mark: Date Extensions
+extension Date {
+    
+    var shortDate: String {
+        return DateFormatter.string(from: self, date: .short, time: .none)
+    }
+    
+    var shortTime: String {
+        return DateFormatter.string(from: self, date: .none, time: .short)
+    }
+    
+    var fillDateTime: String {
+        return DateFormatter.string(from: self, date: .full, time: .full)
+        
+    }
+    
+    var militaryTime: String {
+        return DateFormatter.string(from: self, format: "HH:mm")
+    }
+    
+    var zuluTime: String {
+        return DateFormatter.string(from: self, format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    }
+    
+    var year: Int {
+        return Calendar.current.component(.year, from: self)
+    }
+    
+    var startOfWeek: Date {
+        let date = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))!
+        let dslTimeOffset = NSTimeZone.local.daylightSavingTimeOffset(for: date)
+        return date.addingTimeInterval(dslTimeOffset)
+    }
+    
+    var endOfWeek: Date {
+        return Calendar.current.date(byAdding: .day, value: 6, to: self.startOfWeek)!
+    }
+    
+    var dayOfWeek: Int? {
+        let myCalendar = Calendar(identifier: .gregorian)
+        let weekDay = myCalendar.component(.weekday, from: self)
+        return weekDay
+    }
+    
+    var nextWeek: Date {
+        return Calendar.current.date(byAdding: .second,
+                                     value: Int(7.days.toSeconds),
+                                     to: self).or(self)
+    }
+    
+    var lastWeek: Date {
+        return Calendar.current.date(byAdding: .second,
+                                     value: Int(-7.days.toSeconds),
+                                     to: self).or(self)
+    }
+
+    func after(seconds: Int) -> Date {
+        return Calendar.current.date(byAdding: .seconds,
+                                     value: minutes,
+                                     to: self).or(self)
+    }
+    
+    func after(minutes: Int) -> Date {
+        return Calendar.current.date(byAdding: .minute,
+                                     value: minutes,
+                                     to: self).or(self)
+    }
+    
+    func after(days: Int) -> Date {
+        return Calendar.current.date(byAdding: .day,
+                                     value: days,
+                                     to: self).or(self)
+    }
+    
+    func after(months: Int) -> Date {
+        return Calendar.current.date(byAdding: .month,
+                                     value: months,
+                                     to: self).or(self)
+    }
+    
+    func after(hours: Int) -> Date {
+        return Calendar.current.date(byAdding: .hour,
+                                     value: hours,
+                                     to: self).or(self)
+    }
+    
+    func isBefore(day: Date) -> Bool {
+        let comparison = Calendar.current.compare(self, to: day, toGranularity: Calendar.Component.day)
+        return comparison == .orderedAscending
+    }
+    
+    func isBefore(minutes: Date) -> Bool {
+        let comparison = Calendar.current.compare(self, to: minutes, toGranularity: Calendar.Component.minute)
+        return comparison == .orderedAscending
+    }
+    
+    func isSame(day: Date) -> Bool {
+        let comparison = Calendar.current.compare(self, to: day, toGranularity: Calendar.Component.day)
+        return comparison == .orderedSame
+    }
+    
+    func isAfter(day: Date) -> Bool {
+        let comparison = Calendar.current.compare(self, to: day, toGranularity: Calendar.Component.day)
+        return comparison == .orderedDescending
+    }
+    
+    func isAfter(minutes: Date) -> Bool {
+        let comparison = Calendar.current.compare(self, to: minutes, toGranularity: Calendar.Component.minute)
+        return comparison == .orderedDescending
+    }
+    
+    func toString(format:String) -> String? {
+        return DateFormatter(format: format).string(from: self)
+    }
+    
+    static func next15MinuteInterval() -> Date {
+        let calendar = Calendar.current
+        let minutes = calendar.component(Calendar.Component.minute, from: Date())
+        
+        let minutesPast15MinuteInterval = minutes % 15
+        let minutesTo15MinuteInterval = 15 - minutesPast15MinuteInterval
+        
+        let date = Date().after(minutes: minutesTo15MinuteInterval)
+        
+        return date
+    }
+}
+
+// Mark: DateFormatter Extensions
+extension DateFormatter {
+    class func string(from fromDate: Date,
+                      date dateStyle: DateFormatter.Style,
+                      time timeStyle: DateFormatter.Style) -> String {
+        let dateFormater = DateFormatter()
+        dateFormater.dateStyle = dateStyle
+        dateFormater.timeStyle = timeStyle
+        return dateFormater.string(from: fromDate)
+    }
+    
+    class func string(from fromDate: Date, format: String) -> String {
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = format
+        return dateFormater.string(from: fromDate)
+    }
+    
+    convenience init (format: String) {
+        self.init()
+        dateFormat = format
+        locale = Locale.current
+    }
 }
 
 
