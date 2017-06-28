@@ -5,7 +5,7 @@
 //  Created by Magfurul Abeer on 9/4/16.
 //  Copyright © 2016 Magfurul Abeer. All rights reserved.
 //
-// SideKicK is a collection of useful extensions to speed up the development process
+// SideKicK is a collection of convenient extensions to speed up the development process
 
 
 import UIKit
@@ -511,6 +511,21 @@ extension DateFormatter {
     }
 }
 
+
+/*
+ TODO:
+ 
+ Arrays
+    prepend
+    flatten
+    flattenDeep
+    isUnique
+    unique
+    
+ 
+ String
+    trim
+ */
 
 
 
