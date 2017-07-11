@@ -13,8 +13,7 @@ import UIKit
 // TODO:
 
 extension String {
-  
-  /// Subscripting returns the character at that index. Negative value start from the end.
+  /// Subscripting returns a string of
   subscript(index: Int) -> String {
     get {
       let referenceIndex = index >= 0 ? self.startIndex : self.endIndex
@@ -24,69 +23,60 @@ extension String {
     }
   }
   
-  func char() -> Character {
-    return self[self.startIndex]
-  }
-  
   /// Returns length of the String
-  func length() -> Int {
+  var length: Int {
     return self.characters.count
   }
   
-  
   /// Returns substring starting from and ending by given parameters
   /// The substring will not include character at index number 'to'
-  func substring(from: Int, to: Int) -> String? {
-    if from >= 0 && to >= 0 && to <= self.characters.count {
-      let startIndex = self.startIndex.advancedBy(from)
-      let endIndex = self.startIndex.advancedBy(to - 1)
-      
-      return self.substringToIndex(endIndex).substringFromIndex(startIndex)
-    } else {
+  func substring(from start: Int, to end: Int) -> String? {
+    guard start >= 0 && end >= 0 && end <= self.characters.count else {
       return nil
     }
+    
+    let startIndex = self.index(self.startIndex, offsetBy: start)
+    let endIndex = self.index(self.startIndex, offsetBy: end)
+    
+    return self.substring(to: endIndex).substring(from: startIndex)
   }
   
   /// Returns substring starting from and ending at given parameters
   /// The substring will include character at index number 'through'
-  func substring(from: Int, through: Int) -> String? {
-    if from >= 0 && through >= 0 && through < self.characters.count {
-      let startIndex = self.startIndex.advancedBy(from)
-      let endIndex = self.startIndex.advancedBy(through)
-      
-      return self.substringToIndex(endIndex).substringFromIndex(startIndex)
-    } else {
+  func substring(from start: Int, through end: Int) -> String? {
+    guard start >= 0 && end >= 0 && end + 1 <= self.characters.count else {
       return nil
     }
+    
+    let startIndex = self.index(self.startIndex, offsetBy: start)
+    let endIndex = self.index(self.startIndex, offsetBy: end + 1)
+    
+    return self.substring(to: endIndex).substring(from: startIndex)
   }
   
   /// Returns substring starting from given parameter and ending 'by' indexes after
   /// The parameter 'by' does not include the initial index
-  func substring(from: Int, by: Int) -> String? {
-    if from >= 0 && by >= 0 && by < self.characters.count {
-      let startIndex = self.startIndex.advancedBy(from)
-      let endIndex = startIndex.advancedBy(by)
-      
-      return self.substringToIndex(endIndex).substringFromIndex(startIndex)
-    } else {
+  func substring(from start: Int, by end: Int) -> String? {
+    guard start >= 0 && end >= 0 && start + end + 1 <= self.characters.count else {
       return nil
     }
+    
+    let startIndex = self.index(self.startIndex, offsetBy: start)
+    let endIndex = self.index(startIndex, offsetBy: end + 1)
+    return self.substring(to: endIndex).substring(from: startIndex)
   }
   
   /// Returns substring starting from and with the size of the given parameters
   /// The parameter 'size' does include the initial index
   func substring(start: Int, size: Int) -> String? {
-    if size == 0 {
-      return ""
-    }
-    if start >= 0 && size > 0 && (start + size) <= self.characters.count {
-      let startIndex = self.startIndex.advancedBy(start)
-      let endIndex = startIndex.advancedBy(size - 1)
-      
-      return self.substringToIndex(endIndex).substringFromIndex(startIndex)
-    } else {
+    guard size != 0 else { return "" }
+    guard start >= 0 && size > 0 && start + size <= self.characters.count else {
       return nil
     }
+    
+    let startIndex = self.index(self.startIndex, offsetBy: start)
+    let endIndex = self.index(startIndex, offsetBy: size)
+    return self.substring(to: endIndex).substring(from: startIndex)
   }
 }
 
