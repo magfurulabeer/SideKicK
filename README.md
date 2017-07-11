@@ -2,10 +2,6 @@
 
 SideKicK is a collection of convenient helper methods in Swift to promote speed and intuitive coding.
 
-  - Type some Markdown on the left
-  - See HTML in the right
-  - Magic
-
 ## Documentation
 
 ### String
