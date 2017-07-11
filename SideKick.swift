@@ -13,6 +13,8 @@ import UIKit
 // TODO:
 
 extension String {
+  //TODO: Add checks for negative indices that are longer than the String
+  
   /// Subscripting returns a string of
   subscript(index: Int) -> String {
     get {
@@ -232,7 +234,7 @@ extension Int {
    
    Eg:
    
-   3.upTo(1) { n in
+   3.downTo(1) { n in
    print(n)
    }
    
@@ -333,11 +335,6 @@ extension Int {
     formatter.numberStyle = .currency
     return formatter.string(from: NSNumber(integerLiteral: self)) ?? ""
   }
-  
-  var ok: Int {
-    return 0
-  }
-  
 }
 
 
